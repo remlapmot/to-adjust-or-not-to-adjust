@@ -1,0 +1,271 @@
+---
+title: "To adjust, or not to adjust: that is the question"
+author: "Tom Palmer, `tom.palmer@lancaster.ac.uk`, Department of Mathematics and Statistics, Lancaster University"
+date: "MSc Statistics Open Day February 2019"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(DiagrammeR)
+```
+
+## Introduction
+
+This App demonstrates some situations in which adjusting for a covariate in a regression can change the interpretation of what we are estimating.
+
+For several scenarios you will fit linear models and then be asked to think about the relationships between the variables.
+
+## Background
+
+A linear model is a model of the form, for $i = 1,\dots,N$ observations
+$$
+y_i = \beta_0 + \beta_1x_i + \varepsilon_i,\ \varepsilon_i \sim N(0, \sigma^2).
+$$
+
+When we adjust for an additional variable, say $C$, in this context we mean include it as an additional additive covariate as follows,
+$$
+y_i = \beta_0 + \beta_1x_i + \beta_2c_i + \varepsilon_i,\ \varepsilon_i \sim N(0, \sigma^2).
+$$
+
+## What you need to do{.tabset .tabset-fade .tabset-pills}
+
+- In the tabs below there are three scenarios
+- In each tab there are two buttons to press to fit the unadjusted and adjusted models
+- The data has been simulated such that the true value of the coefficient on x is 1
+- After fitting both models think about the estimates that you have found -- what does this tell you about the relationships between the variables?
+- The third button reveals the description of what relationship between the variables has generated the data
+
+### Scenario 1
+
+```{r, include=FALSE}
+simconf <- function(seed = 12345){
+  set.seed(seed)
+  n <- 1000
+  c <- rnorm(n)
+  x <- c + rnorm(n)
+  y <- x + c + rnorm(n)
+  data.frame(x, c, y)
+}
+```
+
+```{r, echo=FALSE}
+shinyApp(
+
+  ui = fluidPage(
+    actionButton(inputId = "click1", label = "Click to run unadjusted model"),
+    verbatimTextOutput("fit1"),
+    
+    actionButton(inputId = "click2", label = "Click to run adjusted model"),
+    verbatimTextOutput("fit2"),
+    
+    actionButton(inputId = "click3", label = "Click to reveal description"),
+    grVizOutput("dag1"),
+    textOutput("textout1")
+    
+  ),
+
+  server = function(input, output) {
+    dat <- simconf()
+    
+    observeEvent(input$click1, {
+      output$fit1 = renderPrint({
+        summary(lm(y ~ x, data = dat))
+      })      
+    })
+    
+    observeEvent(input$click2, {
+      output$fit2 = renderPrint({
+        summary(lm(y ~ x + c, data = dat))
+      })      
+    })
+    
+    observeEvent(input$click3, {
+      output$dag1 = renderGrViz({
+        DiagrammeR::grViz("
+      digraph dag {
+
+      graph [rankdir=TB]
+
+      node [shape=circle]
+      C [label='C']
+      X [label='X']
+      Y [label='Y']
+
+      { rank = same; X Y }
+
+      C -> X
+      C -> Y
+      X -> Y [minlen=3]
+      }
+      ", height = 100)
+      })
+    })
+    
+    observeEvent(input$click3, {
+      output$textout1 <- renderText({
+        "This example is of confounding, it is appropriate to adjust for C in this model because C is a confounder."
+        })
+    })
+    
+  },
+
+  options = list(height = 1000)
+)
+```
+
+### Scenario 2
+
+```{r, include=FALSE}
+simmed <- function(seed = 12345){
+  set.seed(seed)
+  n <- 1000
+  x <- rnorm(n)
+  c <- x + rnorm(n)
+  y <- x + c + rnorm(n)
+  data.frame(x, c, y)
+}
+```
+
+```{r, echo=FALSE}
+shinyApp(
+
+  ui = fluidPage(
+    actionButton(inputId = "click1", label = "Click to run unadjusted model"),
+    verbatimTextOutput("fit1"),
+    
+    actionButton(inputId = "click2", label = "Click to run adjusted model"),
+    verbatimTextOutput("fit2"),
+    
+    actionButton(inputId = "click3", label = "Click to reveal description"),
+    grVizOutput("dag1"),
+    textOutput("textout1")
+    
+  ),
+
+  server = function(input, output) {
+    dat <- simmed()
+    
+    observeEvent(input$click1, {
+      output$fit1 = renderPrint({
+        summary(lm(y ~ x, data = dat))
+      })      
+    })
+    
+    observeEvent(input$click2, {
+      output$fit2 = renderPrint({
+        summary(lm(y ~ x + c, data = dat))
+      })      
+    })
+    
+    observeEvent(input$click3, {
+      output$dag1 = renderGrViz({
+        DiagrammeR::grViz("
+      digraph dag {
+
+      graph [rankdir=TB]
+
+      node [shape=circle]
+      X [label='X']
+      C [label='C']
+      Y [label='Y']
+
+      { rank = same; X C Y }
+
+      X -> C [minlen=2]
+      C -> Y [minlen=2]
+      X -> Y [minlen=4]
+      }
+      ", height = 100)
+      })
+    })
+    
+    observeEvent(input$click3, {
+      output$textout1 <- renderText({
+        "This example is of mediation. The first model estimates the total effect of X on Y. In the second model the coefficient on X is the direct effect of X on Y, i.e. the effect not through the mediator C."
+        })
+    })
+    
+  },
+
+  options = list(height = 1000)
+)
+```
+
+### Secnario 3
+
+```{r, include=FALSE}
+simcoll <- function(seed = 12345){
+  set.seed(seed)
+  n <- 1000
+  x <- rnorm(n)
+  y <- x + rnorm(n)
+  c <- x + y + rnorm(n)
+  data.frame(x, c, y)
+}
+```
+
+```{r, echo=FALSE}
+shinyApp(
+
+  ui = fluidPage(
+    actionButton(inputId = "click1", label = "Click to run unadjusted model"),
+    verbatimTextOutput("fit1"),
+    
+    actionButton(inputId = "click2", label = "Click to run adjusted model"),
+    verbatimTextOutput("fit2"),
+    
+    actionButton(inputId = "click3", label = "Click to reveal description"),
+    grVizOutput("dag1"),
+    textOutput("textout1")
+    
+  ),
+
+  server = function(input, output) {
+    dat <- simcoll()
+    
+    observeEvent(input$click1, {
+      output$fit1 = renderPrint({
+        summary(lm(y ~ x, data = dat))
+      })      
+    })
+    
+    observeEvent(input$click2, {
+      output$fit2 = renderPrint({
+        summary(lm(y ~ x + c, data = dat))
+      })      
+    })
+    
+    observeEvent(input$click3, {
+      output$dag1 = renderGrViz({
+        DiagrammeR::grViz("
+      digraph dag {
+
+      graph [rankdir=TB]
+
+      node [shape=circle]
+      X [label='X']
+      C [label='C']
+      Y [label='Y']
+
+      { rank = same; X Y }
+
+      X -> Y [minlen=3]
+      X -> C
+      Y -> C [minlen=.5]
+      }
+      ", height = 100)
+      })
+    })
+    
+    observeEvent(input$click3, {
+      output$textout1 <- renderText({
+        "This example is of a collider/common cause. In fact the unadjusted model is unbiased and adjusting for C introduces bias into our coefficient on X."
+        })
+    })
+    
+  },
+
+  options = list(height = 1000)
+)
+```

@@ -5,8 +5,8 @@ account: remlapmot
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 710787
-bundleId: 1872138
+bundleId: 1873578
 url: https://remlapmot.shinyapps.io/to-adjust-or-not-to-adjust/
-when: 1549994773.00349
+when: 1550050312.72903
 asMultiple: FALSE
 asStatic: FALSE

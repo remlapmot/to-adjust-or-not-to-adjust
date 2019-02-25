@@ -1,10 +1,13 @@
 ---
 title: "To adjust, or not to adjust: that is the question"
 author: "Tom Palmer, `tom.palmer@lancaster.ac.uk`, Department of Mathematics and Statistics, Lancaster University"
-date: "MSc Statistics Open Day, 27^th^ February 2019"
+#date: "MSc Statistics Open Day, 27^th^ February 2019"
 output:
   html_document:
     theme: flatly
+    toc: true
+    toc_float: true
+    toc_depth: 2
 runtime: shiny
 ---
 
@@ -32,7 +35,7 @@ $$
 y_i = \beta_0 + \beta_1x_i + \beta_2c_i + \varepsilon_i,\ \varepsilon_i \sim N(0, \sigma^2).
 $$
 
-## What you need to do{.tabset .tabset-fade .tabset-pills}
+## What you need to do
 
 - In the tab for each scenario there are two buttons to press to fit the unadjusted and adjusted models.
 - Click both buttons and look at the estimates of the coefficients.
@@ -41,6 +44,8 @@ $$
   + In which model have you obtained a coefficient on $X$ close to 1?
   + Write down (or remember) what you think the relationship between the variables might be.
 - To reveal the answer click the third button.
+
+## Scenarios{.tabset .tabset-fade .tabset-pills}
 
 ### Scenario 1
 

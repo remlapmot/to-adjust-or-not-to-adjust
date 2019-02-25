@@ -437,3 +437,88 @@ shinyApp(
   options = list(height = 1000)
 )
 ```
+
+### Scenario 6
+
+```{r, include=FALSE}
+simsquared <- function(seed = 12345){
+  set.seed(seed)
+  n <- 1000
+  c <- rnorm(n)
+  x <- rnorm(n)
+  y <- x + 5 * x^2 + 5 * c + rnorm(n)
+  data.frame(x, c, y)
+}
+```
+
+```{r, echo=FALSE}
+shinyApp(
+
+  ui = fluidPage(
+    actionButton(inputId = "click1", label = "Click to run unadjusted model"),
+    verbatimTextOutput("fit1"),
+    
+    actionButton(inputId = "click2", label = "Click to run adjusted model"),
+    verbatimTextOutput("fit2"),
+    
+    actionButton(inputId = "click3", label = "Click to reveal description"),
+    grVizOutput("dag1"),
+    textOutput("textout1"),
+    
+    actionButton(inputId = "click2a", label = "Click to run third model"),
+    verbatimTextOutput("fit2a")
+  ),
+
+  server = function(input, output) {
+    dat <- simsquared()
+    
+    observeEvent(input$click1, {
+      output$fit1 = renderPrint({
+        summary(lm(y ~ x, data = dat))
+      })      
+    })
+    
+    observeEvent(input$click2, {
+      output$fit2 = renderPrint({
+        summary(lm(y ~ x + c, data = dat))
+      })      
+    })
+    
+    observeEvent(input$click3, {
+      output$dag1 = renderGrViz({
+        DiagrammeR::grViz("
+      digraph dag {
+
+      graph [rankdir=TB]
+
+      node [shape=circle]
+      C [label='C']
+      X [label='X']
+      Y [label='Y']
+
+      { rank = same; X Y }
+
+      C -> Y
+      X -> Y [minlen=3]
+      }
+      ", height = 100)
+      })
+    })
+    
+    observeEvent(input$click3, {
+      output$textout1 <- renderText({
+        "In this example the data generating model for Y includes the main effects of X and C and X^2."
+        })
+    })
+    
+    observeEvent(input$click2a, {
+      output$fit2a = renderPrint({
+        summary(lm(y ~ x + I(x^2) + c, data = dat))
+      })      
+    })
+
+  },
+
+  options = list(height = 1000)
+)
+```

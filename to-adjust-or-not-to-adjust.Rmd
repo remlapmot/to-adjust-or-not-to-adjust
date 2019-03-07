@@ -98,15 +98,15 @@ shinyApp(
 
       graph [rankdir=TB]
 
-      node [shape=circle]
-      C [label='C']
-      X [label='X']
-      Y [label='Y']
+      node [shape=plaintext]
+      C
+      X
+      Y
 
       { rank = same; X Y }
 
       C -> Y
-      X -> Y [minlen=3]
+      X -> Y [minlen=2]
       }
       ", height = 100)
       })
@@ -536,9 +536,9 @@ simmbias <- function(seed = 12345){
   n <- 1000
   a <- rnorm(n)
   b <- rnorm(n)
-  c <- a + b + rnorm()
+  c <- a + b + rnorm(n)
   x <- a + rnorm(n)
-  y <- x + b rnorm(n)
+  y <- x + b + rnorm(n)
   data.frame(x, a, b, c, y)
 }
 ```
@@ -562,7 +562,7 @@ shinyApp(
   ),
 
   server = function(input, output) {
-    dat <- simsquared()
+    dat <- simmbias()
     
     observeEvent(input$click1, {
       output$fit1 = renderPrint({
@@ -583,21 +583,21 @@ shinyApp(
 
       graph [rankdir=TB]
 
-      node [shape=box]
-      A
-      B
-      C
-      X
-      Y
+      node [shape=plaintext]
+      A [pos='0,2!']
+      B [pos='2,2!']
+      C [pos='1,1!']
+      X [pos='0,0!']
+      Y [pos='2,0!']
 
       { rank = same; A B }
       { rank = same; X Y }
 
-      A -> C
-      B -> C
-      A -> X
-      B -> Y
-      X -> Y [minlen=3]
+      A -> C 
+      B -> C 
+      A -> X [minlen=2]
+      B -> Y [minlen=2]
+      X -> Y [minlen=2]
       }
       ", height = 100)
       })

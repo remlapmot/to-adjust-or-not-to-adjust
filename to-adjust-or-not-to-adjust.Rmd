@@ -620,3 +620,98 @@ shinyApp(
   options = list(height = 1000)
 )
 ```
+
+### Scenario 8
+
+```{r, include=FALSE}
+simbutterflybias <- function(seed = 12345){
+  set.seed(seed)
+  n <- 1000
+  a <- rnorm(n)
+  b <- rnorm(n)
+  c <- a + b + rnorm(n)
+  x <- a + c + rnorm(n)
+  y <- x + b + c + rnorm(n)
+  data.frame(x, a, b, c, y)
+}
+```
+
+```{r, echo=FALSE}
+shinyApp(
+
+  ui = fluidPage(
+    actionButton(inputId = "click1", label = "Click to run unadjusted model"),
+    verbatimTextOutput("fit1"),
+    
+    actionButton(inputId = "click2", label = "Click to run adjusted model"),
+    verbatimTextOutput("fit2"),
+    
+    actionButton(inputId = "click3", label = "Click to reveal description"),
+    grVizOutput("dag1"),
+    textOutput("textout1"),
+    
+    actionButton(inputId = "click2a", label = "Click to run third model"),
+    verbatimTextOutput("fit2a")
+  ),
+
+  server = function(input, output) {
+    dat <- simbutterflybias()
+    
+    observeEvent(input$click1, {
+      output$fit1 = renderPrint({
+        summary(lm(y ~ x, data = dat))
+      })      
+    })
+    
+    observeEvent(input$click2, {
+      output$fit2 = renderPrint({
+        summary(lm(y ~ x + c, data = dat))
+      })      
+    })
+    
+    observeEvent(input$click3, {
+      output$dag1 = renderGrViz({
+        DiagrammeR::grViz("
+      digraph dag {
+
+      graph [rankdir=TB]
+
+      node [shape=plaintext]
+      A [pos='0,2!']
+      B [pos='2,2!']
+      C [pos='1,1!']
+      X [pos='0,0!']
+      Y [pos='2,0!']
+
+      { rank = same; A B }
+      { rank = same; X Y }
+
+      A -> C 
+      B -> C 
+      C -> X
+      C -> Y
+      A -> X [minlen=2]
+      B -> Y [minlen=2]
+      X -> Y [minlen=3]
+      }
+      ", height = 100)
+      })
+    })
+    
+    observeEvent(input$click3, {
+      output$textout1 <- renderText({
+        "This example uses data generated under the butterfly bias structure."
+        })
+    })
+    
+    observeEvent(input$click2a, {
+      output$fit2a = renderPrint({
+        summary(lm(y ~ x + a + b + c, data = dat))
+      })      
+    })
+
+  },
+
+  options = list(height = 1000)
+)
+```

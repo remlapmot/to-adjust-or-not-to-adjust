@@ -175,16 +175,16 @@ shinyApp(
 
       graph [rankdir=TB]
 
-      node [shape=circle]
-      C [label='C']
-      X [label='X']
-      Y [label='Y']
+      node [shape=plaintext]
+      C
+      X
+      Y
 
       { rank = same; X Y }
 
       C -> X
       C -> Y
-      X -> Y [minlen=3]
+      X -> Y [minlen=2]
       }
       ", height = 100)
       })

@@ -253,10 +253,10 @@ shinyApp(
 
       graph [rankdir=TB]
 
-      node [shape=circle]
-      X [label='X']
-      C [label='C']
-      Y [label='Y']
+      node [shape=plaintext]
+      X
+      C
+      Y
 
       { rank = same; X C Y }
 

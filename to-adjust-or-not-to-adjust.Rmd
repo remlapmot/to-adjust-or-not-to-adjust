@@ -411,15 +411,15 @@ shinyApp(
 
       graph [rankdir=TB]
 
-      node [shape=circle]
-      C [label='C']
-      X [label='X']
-      Y [label='Y']
+      node [shape=plaintext]
+      C 
+      X 
+      Y 
 
       { rank = same; X Y }
 
       C -> Y
-      X -> Y [minlen=3]
+      X -> Y [minlen=2]
       }
       ", height = 100)
       })
@@ -427,7 +427,7 @@ shinyApp(
     
     observeEvent(input$click3, {
       output$textout1 <- renderText({
-        "In this example the data generating model for Y includes the main effects of X and C and their interaction."
+        "In this example the data generating model for Y includes the main effects of X and C and their interaction (the presence of which is not ruled out by this DAG)."
         })
     })
     
@@ -496,15 +496,15 @@ shinyApp(
 
       graph [rankdir=TB]
 
-      node [shape=circle]
-      C [label='C']
-      X [label='X']
-      Y [label='Y']
+      node [shape=plaintext]
+      C 
+      X 
+      Y 
 
       { rank = same; X Y }
 
       C -> Y
-      X -> Y [minlen=3]
+      X -> Y [minlen=2]
       }
       ", height = 100)
       })

@@ -1,0 +1,34 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# to-adjust-or-not-to-adjust
+
+R Shiny App demonstrating different scenarios about adjusting for covariates in statistical models when the underlying data generating process is different.
+
+## Building the website
+
+To build the website, either
+
+* open the project in RStudio, open `to-adjust-or-not-to-adjust.Rmd` and click the *Knit* button
+* or, run the following code in R  
+
+    ``` r
+    rmarkdown::render('to-adjust-or-not-to-adjust.Rmd', encoding = 'UTF-8')
+    ```
+
+## Website
+
+The website is rendered at https://remlapmot.shinyapps.io/to-adjust-or-not-to-adjust/
+
+```{r, echo=FALSE, out.width="33%"}
+code <- qrcode::qr_code("https://remlapmot.shinyapps.io/to-adjust-or-not-to-adjust/")
+qrcode::generate_svg(
+  qrcode = code,
+  filename = "img/qrcode.svg",
+  show = FALSE
+)
+knitr::include_graphics("img/qrcode.svg")
+```

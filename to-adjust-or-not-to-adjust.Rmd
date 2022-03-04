@@ -1,7 +1,6 @@
 ---
 title: "To adjust, or not to adjust: that is the question"
-author: "Tom Palmer, `tom.palmer@lancaster.ac.uk`, Department of Mathematics and Statistics, Lancaster University"
-#date: "MSc Statistics Open Day, 27^th^ February 2019"
+author: "Tom Palmer, PHS and MRC IEU, University of Bristol"
 output:
   html_document:
     theme: flatly

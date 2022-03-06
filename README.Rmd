@@ -21,7 +21,7 @@ To build the app, either
 
 ## App URL
 
-The app is served at https://remlapmot.shinyapps.io/to-adjust-or-not-to-adjust/
+The app is deployed at https://remlapmot.shinyapps.io/to-adjust-or-not-to-adjust/
 
 ```{r, echo=FALSE, out.width="33%"}
 code <- qrcode::qr_code("https://remlapmot.shinyapps.io/to-adjust-or-not-to-adjust/")
@@ -35,8 +35,8 @@ knitr::include_graphics("img/qrcode.svg")
 
 ### To deploy (and update) to shinyapps.io
 
-* Click the *Publish* button (blue circle in top right corner of Source pane) and follow subsequent instructions or run  
-* Or, through RStudio: Tools | Global Options | Publishing; and Connect shinyapps.io account
+* Click the *Publish* button (blue circle in top right corner of Source pane) and follow subsequent instructions to connect your shinyapps.io account
+* Or, in RStudio go to: Tools | Global Options | Publishing; and Connect shinyapps.io account and then run
 
     ```r
     rsconnect::deployApp()

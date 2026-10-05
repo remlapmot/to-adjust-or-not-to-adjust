@@ -21,10 +21,10 @@ To build the app, either
 
 ## App URL
 
-The app is deployed at https://remlapmot.shinyapps.io/to-adjust-or-not-to-adjust/
+The app is deployed at https://remlapmot-to-adjust-or-not-to-adjust.share.connect.posit.cloud
 
 ```{r, echo=FALSE, out.width="33%"}
-code <- qrcode::qr_code("https://remlapmot.shinyapps.io/to-adjust-or-not-to-adjust/")
+code <- qrcode::qr_code("https://remlapmot-to-adjust-or-not-to-adjust.share.connect.posit.cloud")
 qrcode::generate_svg(
   qrcode = code,
   filename = "img/qrcode.svg",
